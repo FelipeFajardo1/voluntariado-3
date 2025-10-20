@@ -8,7 +8,6 @@ jobs:
     name: Test NestJS App
     runs-on: ubuntu-latest
 
-    # ✅ Sección añadida: levantar un contenedor MySQL como servicio
     services:
       mysql:
         image: mysql:8.0
@@ -20,7 +19,7 @@ jobs:
         ports:
           - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping -h localhost -u root -proot"
+          --health-cmd="mysqladmin ping -h localhost -uroot -proot"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
@@ -34,6 +33,17 @@ jobs:
         with:
           node-version: 20
 
+      - name: Wait for MySQL to be ready
+        run: |
+          for i in {1..10}; do
+            if mysqladmin ping -h"127.0.0.1" -uroot -proot --silent; then
+              echo "✅ MySQL is ready"
+              break
+            fi
+            echo "⏳ Waiting for MySQL..."
+            sleep 5
+          done
+
       - name: Install dependencies (NestJS)
         working-directory: ./backend/nest-app
         run: npm install
@@ -41,17 +51,24 @@ jobs:
       - name: Test build and run NestJS
         working-directory: ./backend/nest-app
         env:
-          # ✅ Variables de entorno para que NestJS use el contenedor MySQL
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          DB_HOST: mysql          # Nombre del servicio del contenedor
+          DB_HOST: mysql
           DB_PORT: 3306
           DB_DATABASE: bd_voluntariado
           DB_USER: root
-          DB_PASSWORD: 
+          DB_PASSWORD: root
         run: |
-          npm run start:dev 
+          echo "JWT_SECRET=$JWT_SECRET" >> .env
+          echo "DB_HOST=$DB_HOST" >> .env
+          echo "DB_PORT=$DB_PORT" >> .env
+          echo "DB_DATABASE=$DB_DATABASE" >> .env
+          echo "DB_USER=$DB_USER" >> .env
+          echo "DB_PASSWORD=$DB_PASSWORD" >> .env
+          npm run build
+          npm run start:dev &
           sleep 10
           pkill node
+
 
   test-backend-fastapi:
     name: Test FastAPI Verificador
