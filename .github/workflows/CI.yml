@@ -45,11 +45,10 @@ jobs:
           DB_HOST: mysql          # Nombre del servicio del contenedor
           DB_PORT: 3306
           DB_DATABASE: bd_voluntariado
-          DB_USER: testuser
-          DB_PASSWORD: testpassword
+          DB_USER: root
+          DB_PASSWORD: 
         run: |
-          npm run build
-          npm run start:dev &
+          npm run start:dev 
           sleep 10
           pkill node
 
