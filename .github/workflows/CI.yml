@@ -13,10 +13,10 @@ jobs:
       mysql:
         image: mysql:8.0
         env:
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: bd_voluntariado
-          MYSQL_USER: root
-          MYSQL_PASSWORD: 
+          MYSQL_USER: testuser
+          MYSQL_PASSWORD: testpassword
         ports:
           - 3306:3306
         options: >-
