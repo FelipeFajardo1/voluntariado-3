@@ -13,10 +13,10 @@ jobs:
       mysql:
         image: mysql:8.0
         env:
-          MYSQL_ROOT_PASSWORD: root
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
           MYSQL_DATABASE: bd_voluntariado
-          MYSQL_USER: testuser
-          MYSQL_PASSWORD: testpassword
+          MYSQL_USER: root
+          MYSQL_PASSWORD: 
         ports:
           - 3306:3306
         options: >-
@@ -42,6 +42,7 @@ jobs:
         working-directory: ./backend/nest-app
         env:
           # ✅ Variables de entorno para que NestJS use el contenedor MySQL
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
           DB_HOST: mysql          # Nombre del servicio del contenedor
           DB_PORT: 3306
           DB_DATABASE: bd_voluntariado
