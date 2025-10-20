@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "nest build && xcopy src\\database\\colombia dist\\database\\colombia /E /I /Y",
+    "build": "nest build && mkdir -p dist/database/colombia && cp -r src/database/colombia/* dist/database/colombia/",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "npm run build && node dist/main.js && nest start --watch ",
